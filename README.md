@@ -64,7 +64,7 @@ This means that if you change the config file while the backend is running the c
 
 4. Clone this repository with
 ```bash
-git clone --recusive https://github.com/EyeTrackVR/ETVR-Backend.git
+git clone --recursive https://github.com/EyeTrackVR/ETVR-Backend.git
 ```
 
 5. navigate into the cloned repository
@@ -130,3 +130,4 @@ poetry run viztracer -m eyetrackvr_backend:main
 
 ## License
 Unless explicitly stated otherwise all code contained within this repository is under the [MIT License](./LICENSE-MIT)
+
