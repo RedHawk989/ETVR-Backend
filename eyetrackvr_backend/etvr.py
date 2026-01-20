@@ -5,7 +5,7 @@ from .processes import VRChatOSCReceiver
 from .config import ConfigManager
 from multiprocessing import Manager
 from .logger import get_logger
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from .tracker import Tracker
 
 logger = get_logger()
@@ -89,6 +89,21 @@ class ETVR:
         self.config.stop()
         os.kill(os.getpid(), signal.SIGTERM)
 
+    def _get_tracker(self, uuid: str) -> Tracker:
+        for tracker in self.trackers:
+            if tracker.uuid == uuid:
+                return tracker
+        raise HTTPException(status_code=404, detail=f"No tracker found with UUID `{uuid}`")
+
+    def tracker_recenter(self, uuid: str) -> dict:
+        return self._get_tracker(uuid).recenter()
+
+    def tracker_calibrate(self, uuid: str) -> dict:
+        return self._get_tracker(uuid).calibrate()
+
+    def tracker_calibration_state(self, uuid: str) -> dict:
+        return self._get_tracker(uuid).check_state()
+
     def add_routes(self) -> None:
         logger.debug("Adding routes to ETVR")
         # region: Image streaming endpoints
@@ -156,6 +171,38 @@ class ETVR:
             tags=["default"],
             description="""
             Return the current status, True if ETVR is running, False if not.
+            """,
+        )
+        # endregion
+        # region: Tracker Calibration Endpoints
+        self.router.add_api_route(
+            name="Recenter tracker calibration",
+            path="/etvr/tracker/{uuid}/recenter",
+            endpoint=self.tracker_recenter,
+            methods=["GET"],
+            tags=["Tracker Calibration"],
+            description="""
+            Recenter the calibration for a tracker.
+            """,
+        )
+        self.router.add_api_route(
+            name="Toggle tracker calibration",
+            path="/etvr/tracker/{uuid}/calibrate",
+            endpoint=self.tracker_calibrate,
+            methods=["GET"],
+            tags=["Tracker Calibration"],
+            description="""
+            Toggle calibration mode for a tracker. Calling again stops calibration and fits the ellipse.
+            """,
+        )
+        self.router.add_api_route(
+            name="Get tracker calibration state",
+            path="/etvr/tracker/{uuid}/calibration/state",
+            endpoint=self.tracker_calibration_state,
+            methods=["GET"],
+            tags=["Tracker Calibration"],
+            description="""
+            Return the current calibration state for a tracker.
             """,
         )
         # endregion
