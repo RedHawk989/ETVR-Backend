@@ -10,6 +10,7 @@ from .tracker import Tracker
 
 logger = get_logger()
 
+
 class ETVR:
     def __init__(self):
         self.running: bool = False

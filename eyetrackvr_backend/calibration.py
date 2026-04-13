@@ -152,8 +152,8 @@ class CalibrationEllipse:
     def fit_and_visualize(self):
         plt.figure(figsize=(10, 8))
 
-        plt.plot(self.xs, self.ys, 'k.', label='Samples', alpha=0.5)
-        plt.axis('equal')
+        plt.plot(self.xs, self.ys, "k.", label="Samples", alpha=0.5)
+        plt.axis("equal")
         plt.grid(True, alpha=0.3)
 
         # Invert plot Y axis to match screen coordinates
@@ -169,24 +169,31 @@ class CalibrationEllipse:
             el_x = self.center[0] + scaled_axes[0] * np.cos(t)
             el_y = self.center[1] + scaled_axes[1] * np.sin(t)
 
-            plt.plot(el_x, el_y, 'b-', linewidth=2, label='Axis-Aligned Fit')
-            plt.plot(self.center[0], self.center[1], 'r+', markersize=15, label='Center')
+            plt.plot(el_x, el_y, "b-", linewidth=2, label="Axis-Aligned Fit")
+            plt.plot(self.center[0], self.center[1], "r+", markersize=15, label="Center")
 
-            plt.hlines(self.center[1],
-                       self.center[0] - scaled_axes[0],
-                       self.center[0] + scaled_axes[0],
-                       colors='g', linestyles='-', label='Width (X)')
+            plt.hlines(
+                self.center[1],
+                self.center[0] - scaled_axes[0],
+                self.center[0] + scaled_axes[0],
+                colors="g",
+                linestyles="-",
+                label="Width (X)",
+            )
 
-            plt.vlines(self.center[0],
-                       self.center[1] - scaled_axes[1],
-                       self.center[1] + scaled_axes[1],
-                       colors='m', linestyles='-', label='Height (Y)')
+            plt.vlines(
+                self.center[0],
+                self.center[1] - scaled_axes[1],
+                self.center[1] + scaled_axes[1],
+                colors="m",
+                linestyles="-",
+                label="Height (Y)",
+            )
 
-            plt.title(f'Axis-Aligned Calibration (FlipX={self.flip_x})')
+            plt.title(f"Axis-Aligned Calibration (FlipX={self.flip_x})")
         else:
             plt.title("Fit FAILED")
 
         plt.legend()
         plt.tight_layout()
         plt.show()
-

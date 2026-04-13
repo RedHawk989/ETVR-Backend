@@ -71,4 +71,3 @@ class CalibrationProcessor(WorkerProcess):
 
     def shutdown(self) -> None:
         pass
-
